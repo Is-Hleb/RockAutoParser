@@ -3,7 +3,7 @@ namespace IsHleb\Parser;
 
 class NodeCollection {
 
-    private array $nodes;
+    private array $nodes = [];
 
     public function push(Node $node) {
         $this->nodes[] = $node;

@@ -137,7 +137,7 @@ class Parser
         ];
         $body = Request::postBody($payload);
         $this->domParser->loadStr($body);
-        echo $body;
+
         $blocks = $this->domParser->find('.ranavnode');
 
         $collection = new NodeCollection();
@@ -179,7 +179,7 @@ class Parser
         ];
         $body = Request::postBody($payload);
 
-        echo $body;
+
 
         $this->domParser->loadStr($body);
         $collection = new CarPartsCollection();
