@@ -10,7 +10,6 @@ class PartInfo
     public string $moreInfoText = ''; // 4
     public string $price = ''; // 5
     public array $imagesUrls = []; // 5
-    public string $brandList = ''; // 7
     public string $moreInfoUrl = '';
 
     public function toArray() : array
@@ -22,7 +21,6 @@ class PartInfo
             'moreInfoText' => $this->moreInfoText,
             'price' => $this->price,
             'imagesUrls' => $this->imagesUrls,
-            'brandList' => $this->brandList,
             'moreInfoUrl' => $this->moreInfoUrl,
         ];
     }
