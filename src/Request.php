@@ -11,7 +11,6 @@ abstract class Request {
 
     public static function postBody(array $payload) {
         $client = new Client();
-        dump($payload);
         $responseBody = $client->post('https://www.rockauto.com/catalog/catalogapi.php', [
             'form_params' => [
                 'func' => 'navnode_fetch',
