@@ -11,6 +11,11 @@ class CarPartsCollection {
         $this->parts[] = $partInfo;
     }
 
+    public function toObjectArray(): array
+    {
+        return $this->parts;
+    }
+
     public function toArray() : array{
         $parts = [];
         foreach ($this->parts as $part) {
