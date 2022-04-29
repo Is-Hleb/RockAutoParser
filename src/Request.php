@@ -6,6 +6,9 @@ use GuzzleHttp\Client;
 abstract class Request {
     public static function getBody(string $url) : string {
         $client = new Client();
+        if(!empty($url)) {
+            return $client->get($url)->getBody();
+        }
         return $client->get('https://www.rockauto.com/')->getBody();
     }
 

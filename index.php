@@ -12,8 +12,11 @@ function dump($value)
 
 $parser = new IsHleb\Parser\Parser();
 
-$collection = $parser->loadL1(); // Модели
-dump($collection);
+$parts = $parser->getPartsByNumber('543024Z029');
+dump($parts);
+
+//$collection = $parser->loadL1(); // Модели
+//dump($collection);
 // $node = $collection->toObjectArray()[0];
 // $node = $parser->parseNext($node); // Года
 // $node = $node->getSubNodes()->toObjectArray()[0];

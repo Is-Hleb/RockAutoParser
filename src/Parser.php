@@ -9,6 +9,81 @@ class Parser
     protected const BASE_URL = "https://www.rockauto.com/en/";
     protected Dom $domParser;
 
+    public function getPartsByNumber(string $number): CarPartsCollection
+    {
+        $url = "https://www.rockauto.com/en/partsearch/?partnum=".$number;
+        $body = Request::getBody($url);
+        $this->domParser->loadStr($body);
+        // echo $body;
+        $collection = new CarPartsCollection();
+
+
+        $blocks = $this->domParser->find('.listing-inner');
+        foreach ($blocks as $block) {
+            $partInfo = new PartInfo();
+
+            // Brand
+            $partInfo->brand = $block->find('.listing-final-manufacturer', 0)->text;
+            // End brand
+
+            // Part Number
+            $partInfo->partNumber = $block->find('span.listing-final-partnumber', 0)->text;
+            // End Part Number
+
+            // Oem Number
+            $oemSpan = $block->find('div.listing-text-row-moreinfo-truck', 0)->find('span', 2);
+            if($oemSpan) {
+                $partInfo->oemNumber = $oemSpan->text;
+            }
+            // End Oem Number
+
+            // Price
+            $partInfo->price = $block->find('span.ra-formatted-amount', 0)->find('span', 0)->text;
+            // End price
+
+            // images
+            $images = $block->find('img.listing-inline-image');
+            $inputs = $block->find('input[type=hidden]');
+            foreach ($inputs as $input) {
+                $value = $input->value;
+                $value = json_decode(htmlspecialchars_decode($value), true);
+                if ($value) {
+                    if (!isset($value['Slots'])) continue;
+                    foreach ($value['Slots'] as $slot) {
+                        foreach ($slot['ImageData'] as $src) {
+                            $src = 'https://www.rockauto.com' . $src;
+                            if (!in_array($src, $partInfo->imagesUrls))
+                                $partInfo->imagesUrls[] = $src;
+                        }
+                    }
+                }
+            }
+            foreach ($images as $image) {
+                $src = 'https://www.rockauto.com' . $image->getAttribute('src');
+                if (!in_array($src, $partInfo->imagesUrls))
+                    $partInfo->imagesUrls[] = $src;
+            }
+            // end images
+
+            // More Info Text
+            $partOne = $block->find('span.span-link-underline-remover', 0);
+            $partOne = $partOne ? $partOne->text : "";
+            $partTwo = $block->find('div.listing-text-row', 0)->find('span', 0)->find('span', 0);
+            $partTwo = $partTwo ? $partTwo->text : "";
+            $partInfo->moreInfoText = trim($partOne . ' ' . $partTwo);
+            // End More Info Text
+
+            // Info link
+            $link = $block->find('a.ra-btn-moreinfo', 0)->getAttribute('href');
+            $partInfo->moreInfoUrl = $link;
+            // End info link
+
+            $collection->push($partInfo);
+        }
+
+        return $collection;
+    }
+
     public function __construct()
     {
         $this->domParser = new Dom;
